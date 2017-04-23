@@ -1,0 +1,49 @@
+A)
+	O tratamento da excepção page fault pelo page handler está 
+organizado nas seguintes categorias:
+
+1.	A página está referenciada, mas não está commited. 
+	Ocorre quando é tentado o acesso a uma página que 
+terá sido unmapped do processo ou libertada, o que 
+resulta numa access violation. Pode também ser causada 
+pela utilização de ponteiros incorretos. 
+
+2.	Tentativa de acesso à pagina que viola as permissões. 
+	Esta excepção ocorre quando o processo tenta aceder a 
+uma página sem as devidas permissões de acesso para a 
+operação em contexto (Read/Write, User/Supervisor). 
+
+3.	Uma página copy-on-write estava prestes a ser 
+modificada. 
+	Ocorre quando um processo tenta escrever numa página 
+copy-on-write (shared), e é tratada da seguinte forma: É 
+feita uma cópia da pagina que continuará disponível aos 
+processos que estavam a ler da mesma. E a original é 
+desmarcada, devolvendo o controlo para o processo que 
+tentou a escrita, podendo a operação ser agora concluída 
+sem causar este tipo de page-fault. 
+
+4.	O stack precisa de ser aumentado. 
+	Quando uma thread tenta guardar um valor no stack e 
+atinge uma zona de memória que ainda não foi alocada, 
+este page-fault é tratado, colocando a thread em pausa 
+e, se houver espaço nas páginas virtuais reservadas para 
+o stack, é alocada uma nova página física a zeros para o 
+processo, podendo assim voltar a ser executado sem 
+levantar a excepção. 
+
+5.	A pagina está referenciada e commited, mas não está 
+mapeada.
+	Este é o caso genérico de page-fault, e que se pode 
+dividir em hard-fault e soft-fault:
+	O soft-fault é tratado caso o memory manager consiga 
+reutilizar a página diretamente da memória, realizando 
+uma busca nas listas de páginas standby e modified ou se 
+está a ser utilizada uma cópia noutro processo, caso 
+encontre a pagina requisitada pode apenas partilhá-la, 
+marcando-a como copy-on-write caso não se queira 
+partilha das alterações.
+	O hard-fault ocorre quando não é encontrada a página 
+na memória e é necessária a cópia a partir de memória 
+não volátil, colocando a tarefa de cópia em queue.
+

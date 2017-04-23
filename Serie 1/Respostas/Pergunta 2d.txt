@@ -1,0 +1,31 @@
+D)
+
+	O swap-file(Swapfile.sys) em alternativa ao paging 
+file tradicional, consiste no reaproveitamento de memória 
+volátil em aplicações Windows, através do "swap das mesmas, 
+ou seja, todo o estado atual das paginas na memória é 
+comprimido e transportado para o System Working Set onde, 
+caso exista uma maior memory pressure ou passado um 
+determinado intervalo de tempo, são transportadas para o 
+pagefile em que em plataformas mobile é normalmente é mantido numa 
+drive flash.
+Caso o utilizador retome a aplicação, o memory manager faz 
+swap da aplicação, ou seja, transporta a coleção de páginas 
+com o estado da aplicação novamente para a memória volátil, 
+onde, caso não haja memória suficiente disponível para 
+alocar as páginas a transportar, é feito o swap de outra(s) 
+aplicações menos utilizadas para store ou pagefile.
+	Este conceito surge com a popularização das 
+plataformas mobile com sistema operativo Windows 8 e 10 
+(ex. smartphones, tablets, surface), em que o ambiente é 
+dividido entre apps com contextos distintos e a partilha de 
+páginas não ocorre através dos mesmos mecanismos utilizados 
+por SO's de computadores pessoais. Normalmente nestes 
+sistemas existem poucas apps em foreground (em muitos casos 
+apenas uma), e onde é desejável uma alteração rápida entre 
+aplicações, em que o tempo de espera/loading seja pouco 
+percetível ao utilizador, garantindo uma maior fluidez do 
+sistema ao alternar entre aplicações abertas recentemente. 
+Isto também permite uma melhor rentabilização das 
+transferências IO na memória flash, e poupança dos ciclos 
+de escrita das mesmas.
