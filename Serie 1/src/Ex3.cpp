@@ -12,7 +12,19 @@
 
 #define DIV 1024 // use to convert bytes to KB
 
+void GetModuleBase(HANDLE process)
+{
+	unsigned char *p = NULL;
+	int guard = 0, nocache = 0;
+	MEMORY_BASIC_INFORMATION info;
 
+	
+		VirtualQueryEx(process, p, &info, sizeof(info)) == sizeof(info);
+		p += info.RegionSize;
+	
+		printf("%p -> %p \t", info.BaseAddress, ((char*)info.BaseAddress + info.RegionSize));
+	
+}
 
 
 void GetLocalProcessInfo(HANDLE hProcess, DWORD processID)
@@ -34,7 +46,7 @@ void GetProcessName(HANDLE hProcess)
 		wchar_t buffer[MAX_PATH];
 		if (GetModuleFileNameEx(hProcess, 0, buffer, sizeof(buffer) - 1))
 		{
-			//std::cout << buffer << "\n";
+			
 			printf("Name process: %ls \n\n", buffer);
 			
 			char path_buffer[_MAX_PATH];
@@ -44,11 +56,8 @@ void GetProcessName(HANDLE hProcess)
 			char ext[_MAX_EXT];
 			wcstombs(path_buffer, buffer, sizeof(buffer));
 			_splitpath(path_buffer, drive, dir, fname, ext);
-			printf("Path extracted with _splitpath:\n");
-			printf("  Drive: %s\n", drive);
-			printf("  Dir: %s\n", dir);
 			printf("  Filename: %s\n", fname);
-			printf("  Ext: %s\n", ext);
+			
 		}
 		else
 		{
@@ -70,6 +79,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 		pid);
 	GetLocalProcessInfo(process, pid);
 	GetProcessName(process);
+	GetModuleBase(process);
 	printf("Usage: %d process ID \n\n", pid);
 	CloseHandle(process);
 
